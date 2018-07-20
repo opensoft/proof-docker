@@ -4,6 +4,8 @@ RUN mkdir /prebuilt && mkdir /sandbox
 COPY prebuilt/*.deb /prebuilt/
 RUN cd /prebuilt \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends \
+        pkg-config zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
     && dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends
 
 RUN rm -rf /prebuilt && rm -rf /var/lib/apt/lists/*
