@@ -1,16 +1,16 @@
-FROM dkormalev/clang-base
+FROM dkormalev/proof-base
 
-RUN mkdir /prebuilt && mkdir /sandbox
-COPY prebuilt/*.deb /prebuilt/
-RUN cd /prebuilt \
+RUN CLANG_VERSION=6.0 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-        pkg-config zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends
+        make pkg-config \
+        clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
+        zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
+    && mkdir /sandbox \
+    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang /usr/bin/clang \
+    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang++ /usr/bin/clang++ \
+    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang-format /usr/bin/clang-format \
+    && /bin/bash /image_cleaner.sh
 
-RUN rm -rf /prebuilt && rm -rf /var/lib/apt/lists/*
-
-ENV QTDIR=/opt/Opensoft/Qt \
-    LD_LIBRARY_PATH=/opt/Opensoft/Qt/lib:$LD_LIBRARY_PATH \
-    PKG_CONFIG_PATH=/opt/Opensoft/Qt/lib/pkgconfig:$PKG_CONFIG_PATH \
-    PATH=/opt/Opensoft/Qt/bin:$PATH
+ENV CC=/usr/bin/clang \
+    CXX=/usr/bin/clang++
