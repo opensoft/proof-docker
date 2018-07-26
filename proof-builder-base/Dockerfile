@@ -3,7 +3,7 @@ FROM dkormalev/proof-base
 RUN CLANG_VERSION=6.0 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
-        make pkg-config git \
+        make pkg-config git fakeroot \
         clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
         zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
     && mkdir /sandbox \
