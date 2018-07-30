@@ -1,7 +1,7 @@
 FROM dkormalev/proof-builder-base
 
 RUN CLANG_VERSION=6.0 \
-    BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev git cmake" \
+    BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev cmake" \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends $BUILD_DEPS \
     && git clone -b 1.3 --depth 1 https://github.com/KDE/clazy.git \
