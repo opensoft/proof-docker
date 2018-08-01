@@ -7,7 +7,7 @@ COPY prebuilt/ndk-bundle.tar.xz /ndk-bundle.tar.xz
 COPY prebuilt/opt_android_qt5.tar.xz /opt_android_qt5.tar.xz
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends ca-certificates wget openjdk-8-jdk xz-utils \
+    && apt-get -qq install -y --no-install-recommends ca-certificates wget openjdk-8-jdk xz-utils python3 git \
     && cp /etc/resolv.conf etc/resolv.conf.old \
     && echo "nameserver 10.40.98.45" > /etc/resolv.conf \
     && mkdir /prebuilt && cd /prebuilt \
