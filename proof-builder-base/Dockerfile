@@ -11,7 +11,7 @@ RUN CLANG_VERSION=6.0 \
     && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang++ /usr/bin/clang++ \
     && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang-format /usr/bin/clang-format \
     && git config --global advice.detachedHead false \
-    && /bin/bash /image_cleaner.sh
+    && /image_cleaner.sh
 
 ENV CC=/usr/bin/clang \
     CXX=/usr/bin/clang++

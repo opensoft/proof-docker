@@ -2,7 +2,8 @@ FROM debian:stretch-backports
 
 COPY image_cleaner.sh /image_cleaner.sh
 
-RUN apt-get -qq update \
+RUN chmod +x /image_cleaner.sh \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends ca-certificates wget \
     && cp /etc/resolv.conf etc/resolv.conf.old \
     && echo "nameserver 10.40.98.45" > /etc/resolv.conf \
@@ -19,7 +20,7 @@ RUN apt-get -qq update \
     && rm /opt/Opensoft/Qt/bin/assistant && rm /opt/Opensoft/Qt/bin/linguist && rm /opt/Opensoft/Qt/bin/designer \
     && rm /opt/Opensoft/Qt/bin/qdoc && rm /opt/Opensoft/Qt/bin/qgltf \
     && rm -rf /opt/Opensoft/Qt/doc && rm -rf /opt/Opensoft/Qt/share \
-    && rm -rf /prebuilt && /bin/bash /image_cleaner.sh
+    && rm -rf /prebuilt && /image_cleaner.sh
 
 ENV QTDIR=/opt/Opensoft/Qt \
     LD_LIBRARY_PATH=/opt/Opensoft/Qt/lib:$LD_LIBRARY_PATH \

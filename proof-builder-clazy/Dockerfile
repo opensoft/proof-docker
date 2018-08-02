@@ -15,7 +15,7 @@ RUN CLANG_VERSION=6.0 \
     && cd ../.. \
     && rm -rf clazy \
     && apt-get -qq purge --auto-remove -y $BUILD_DEPS \
-    && /bin/bash /image_cleaner.sh
+    && /image_cleaner.sh
 
 ENV CLANGXX=$CXX \
     CXX=/usr/bin/clazy
