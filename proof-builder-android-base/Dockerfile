@@ -5,8 +5,10 @@ COPY image_cleaner.sh /image_cleaner.sh
 COPY prebuilt/ndk-bundle.tar.xz /ndk-bundle.tar.xz
 # qca bits
 COPY prebuilt/opt_android_qt5.tar.xz /opt_android_qt5.tar.xz
+COPY qmake_wrapper.sh /qmake_wrapper.sh
 
-RUN apt-get -qq update \
+RUN chmod +x /qmake_wrapper.sh && chmod +x /image_cleaner.sh \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends ca-certificates wget openjdk-8-jdk xz-utils python3 git make \
     && cp /etc/resolv.conf etc/resolv.conf.old \
     && echo "nameserver 10.40.98.45" > /etc/resolv.conf \
@@ -18,7 +20,7 @@ RUN apt-get -qq update \
     && apt-get -qq purge --auto-remove -y wget \
     && rm /opt/android/qt5/lib/libQt53D* && rm /opt/android/qt5/bin/qgltf && rm -rf /opt/android/qt5/doc \
     && cd /prebuilt && mv /opt_android_qt5.tar.xz ./ && tar -xJf opt_android_qt5.tar.xz && cp -R -t /opt/android/qt5 opt_android_qt5/* \
-    && rm -rf /prebuilt && /bin/bash /image_cleaner.sh
+    && rm -rf /prebuilt && /image_cleaner.sh
 
 ENV QTDIR=/opt/android/qt5 \
     LD_LIBRARY_PATH=/opt/android/qt5/lib:$LD_LIBRARY_PATH \
