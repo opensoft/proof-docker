@@ -1,4 +1,4 @@
-FROM dkormalev/proof-builder-base
+FROM opensoftdev/proof-builder-base
 
 COPY etc_apt_aptconfd_default-release /etc/apt/apt.conf.d/default-release
 COPY etc_apt_sources.list /etc/apt/sources.list

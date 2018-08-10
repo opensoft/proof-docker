@@ -1,4 +1,4 @@
-FROM dkormalev/proof-base
+FROM opensoftdev/proof-base
 
 RUN CLANG_VERSION=6.0 \
     && apt-get -qq update \

@@ -1,4 +1,4 @@
-FROM dkormalev/proof-builder-base
+FROM opensoftdev/proof-builder-base
 
 RUN CLANG_VERSION=6.0 \
     BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev cmake" \

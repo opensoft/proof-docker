@@ -1,6 +1,5 @@
 FROM debian:stretch-backports
 
-
 COPY image_cleaner.sh /image_cleaner.sh
 # stripped tar.xz with ndk-bundle from SDK with qrencode and libssl/libcrypto
 COPY prebuilt/ndk-bundle.tar.xz /ndk-bundle.tar.xz

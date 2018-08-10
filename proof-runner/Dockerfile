@@ -1,4 +1,4 @@
-FROM dkormalev/proof-base
+FROM opensoftdev/proof-base
 
 RUN mkdir -p /opt/Opensoft/proof
 
