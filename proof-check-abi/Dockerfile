@@ -23,24 +23,17 @@
 
 # Author: denis.kormalev@opensoftdev.com (Denis Kormalev)
 
-FROM debian:stretch-backports
+FROM opensoftdev/proof-base
 
-COPY image_cleaner.sh /image_cleaner.sh
-COPY prebuilt/*.deb /prebuilt/
+COPY etc_apt_aptconfd_default-release /etc/apt/apt.conf.d/default-release
+COPY etc_apt_sources.list /etc/apt/sources.list
 
-RUN chmod +x /image_cleaner.sh \
-    && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends ca-certificates \
-    && cd /prebuilt && (dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends) \
-    && apt-get -qq install -y --no-install-recommends jq libqrencode3 libproxy1v5 libproxy1-plugin-webkit \
-    && rm /opt/Opensoft/Qt/lib/libQt5Designer* && rm /opt/Opensoft/Qt/bin/designer \
-    && rm /opt/Opensoft/Qt/bin/assistant && rm /opt/Opensoft/Qt/bin/linguist \
-    && rm /opt/Opensoft/Qt/bin/qdoc && rm -rf /opt/Opensoft/Qt/doc && rm -rf /opt/Opensoft/Qt/share \
-    && rm -rf /prebuilt && /image_cleaner.sh
+RUN apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends make pkg-config git fakeroot zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
+    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags \
+    && mkdir /sandbox \
+    && git config --global advice.detachedHead false \
+    && /image_cleaner.sh
 
-ENV QTDIR=/opt/Opensoft/Qt \
-    LD_LIBRARY_PATH=/opt/Opensoft/Qt/lib:$LD_LIBRARY_PATH \
-    PKG_CONFIG_PATH=/opt/Opensoft/Qt/lib/pkgconfig:$PKG_CONFIG_PATH \
-    PATH=/opt/Opensoft/Qt/bin:$PATH
-
-ENTRYPOINT exec /bin/bash
+ENV CC=/usr/bin/gcc \
+    CXX=/usr/bin/g++
