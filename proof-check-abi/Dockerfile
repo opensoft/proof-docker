@@ -30,10 +30,12 @@ COPY etc_apt_sources.list /etc/apt/sources.list
 
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends make pkg-config git fakeroot zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags \
+    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags ccache \
+    && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \
     && /image_cleaner.sh
 
-ENV CC=/usr/bin/gcc \
-    CXX=/usr/bin/g++
+ENV CC=/usr/lib/ccache/gcc \
+    CXX=/usr/lib/ccache/g++ \
+    PATH=/usr/lib/ccache:$PATH
