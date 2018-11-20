@@ -25,6 +25,9 @@
 
 FROM debian:stretch-backports
 
+COPY etc_apt_sources.list /etc/apt/sources.list
+COPY etc_apt_preferences /etc/apt/preferences
+
 COPY image_cleaner.sh /image_cleaner.sh
 # stripped tar.xz with ndk-bundle from SDK with qrencode and libssl/libcrypto
 COPY prebuilt/ndk-bundle.tar.xz /ndk-bundle.tar.xz
@@ -32,9 +35,21 @@ COPY prebuilt/ndk-bundle.tar.xz /ndk-bundle.tar.xz
 ADD prebuilt/qt.tar.xz /opt/android
 COPY qmake_wrapper.sh /qmake_wrapper.sh
 
-RUN chmod +x /qmake_wrapper.sh && chmod +x /image_cleaner.sh \
+RUN CLANG_VERSION=6.0 \
+    BUILD_DEPS="clang-$CLANG_VERSION" \
+    && chmod +x /qmake_wrapper.sh && chmod +x /image_cleaner.sh \
+    && rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends ca-certificates openjdk-8-jdk xz-utils python3 git make \
+    && apt-get -qq install -y --no-install-recommends -t stretch-backports \
+        wget ca-certificates openjdk-8-jdk xz-utils python3 git make $BUILD_DEPS \
+    && apt-get -qq install -y --no-install-recommends -t testing ninja-build \
+    && mkdir /sandbox \
+    && git config --global advice.detachedHead false \
+    && mkdir /extras && cd /extras \
+    && wget https://cmake.org/files/v3.12/cmake-3.12.4.tar.gz && tar -xzf cmake-3.12.4.tar.gz && cd cmake-3.12.4 \
+    && env CC=/usr/lib/llvm-$CLANG_VERSION/bin/clang CXX=/usr/lib/llvm-$CLANG_VERSION/bin/clang++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
+    && cd / && rm -rf extras \
+    && apt-get -qq purge --auto-remove -y $BUILD_DEPS \
     && /image_cleaner.sh
 
 ENV QTDIR=/opt/android/qt/5.10.1/android_armv7 \

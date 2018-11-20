@@ -26,9 +26,9 @@
 FROM opensoftdev/proof-builder-base
 
 RUN CLANG_VERSION=6.0 \
-    BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev cmake" \
+    BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev" \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends $BUILD_DEPS \
+    && apt-get -qq install -y --no-install-recommends -t stretch-backports $BUILD_DEPS \
     && git clone -b master --depth 1 https://github.com/KDE/clazy.git \
     && mkdir clazy/build \
     && cd clazy/build \

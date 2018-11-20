@@ -25,15 +25,20 @@
 
 FROM opensoftdev/proof-base
 
-COPY etc_apt_aptconfd_default-release /etc/apt/apt.conf.d/default-release
 COPY etc_apt_sources.list /etc/apt/sources.list
+COPY etc_apt_preferences /etc/apt/preferences
 
-RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends make pkg-config git fakeroot zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags ccache \
+RUN rm /etc/apt/sources.list.d/backports.list \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends -t stretch-backports make pkg-config git fakeroot zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
+    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags ccache ninja-build \
     && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \
+    && mkdir /extras && cd /extras \
+    && wget https://cmake.org/files/v3.12/cmake-3.12.4.tar.gz && tar -xzf cmake-3.12.4.tar.gz && cd cmake-3.12.4 \
+    && env CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
+    && cd / && rm -rf extras \
     && /image_cleaner.sh
 
 ENV CC=/usr/lib/ccache/gcc \
