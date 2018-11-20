@@ -30,7 +30,7 @@ COPY prebuilt/*.deb /prebuilt/
 
 RUN chmod +x /image_cleaner.sh \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends ca-certificates \
+    && apt-get -qq install -y --no-install-recommends wget ca-certificates \
     && cd /prebuilt && (dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends) \
     && apt-get -qq install -y --no-install-recommends jq libqrencode3 libproxy1v5 libproxy1-plugin-webkit \
     && rm /opt/Opensoft/Qt/lib/libQt5Designer* && rm /opt/Opensoft/Qt/bin/designer \
