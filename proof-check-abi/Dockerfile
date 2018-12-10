@@ -36,7 +36,7 @@ RUN rm /etc/apt/sources.list.d/backports.list \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \
     && mkdir /extras && cd /extras \
-    && wget https://cmake.org/files/v3.12/cmake-3.12.4.tar.gz && tar -xzf cmake-3.12.4.tar.gz && cd cmake-3.12.4 \
+    && wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz && tar -xzf cmake-3.13.1.tar.gz && cd cmake-3.13.1 \
     && env CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
     && cd / && rm -rf extras \
     && /image_cleaner.sh
