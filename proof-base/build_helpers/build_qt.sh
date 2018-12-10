@@ -74,7 +74,7 @@ sed -i -re 's/(branch\s=\s)([0-9]\.[0-9]\.[0-9])/\1v\2/' .gitmodules
 
 ./configure -platform linux-clang -prefix $DEPLOY_PREFIX -extprefix $DEPLOY_EXTPREFIX -release -shared \
 -plugin-sql-psql -plugin-sql-sqlite -qt-xcb -libproxy \
--openssl-linked -c++std c++1z -dbus-linked -fontconfig -nomake examples -nomake tests -no-gtk -no-qml-debug \
+-openssl-linked -c++std c++1y -dbus-linked -fontconfig -nomake examples -nomake tests -no-gtk -no-qml-debug \
 -opensource -confirm-license -silent -no-use-gold-linker
 
 make -j $BUILDING_THREADS_COUNT

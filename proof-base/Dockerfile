@@ -33,9 +33,9 @@ RUN chmod +x /image_cleaner.sh \
     && apt-get -qq install -y --no-install-recommends wget ca-certificates \
     && cd /prebuilt && (dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends) \
     && apt-get -qq install -y --no-install-recommends jq libqrencode3 libproxy1v5 libproxy1-plugin-webkit \
-    && rm /opt/Opensoft/Qt/lib/libQt5Designer* && rm /opt/Opensoft/Qt/bin/designer \
-    && rm /opt/Opensoft/Qt/bin/assistant && rm /opt/Opensoft/Qt/bin/linguist \
-    && rm /opt/Opensoft/Qt/bin/qdoc && rm -rf /opt/Opensoft/Qt/doc && rm -rf /opt/Opensoft/Qt/share \
+    && (rm /opt/Opensoft/Qt/lib/libQt5Designer* || true) && (rm /opt/Opensoft/Qt/bin/designer || true) \
+    && (rm /opt/Opensoft/Qt/bin/assistant || true) && (rm /opt/Opensoft/Qt/bin/linguist || true) \
+    && (rm /opt/Opensoft/Qt/bin/qdoc || true) && (rm -rf /opt/Opensoft/Qt/doc || true) && (rm -rf /opt/Opensoft/Qt/share || true) \
     && rm -rf /prebuilt && /image_cleaner.sh
 
 ENV QTDIR=/opt/Opensoft/Qt \
