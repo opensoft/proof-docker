@@ -90,6 +90,4 @@ EOT
 
 make install
 
-sed -i -e "s|${PACKAGE_ROOT}||g" ${PACKAGE_ROOT}${INSTALL_DIR}/lib/pkgconfig/opencv.pc
-
 fakeroot dpkg-deb --build "$PACKAGE_ROOT" "$PACKAGE_FILEPATH"
