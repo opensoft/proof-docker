@@ -34,7 +34,7 @@ PACKAGE_DESCRIPTION="OpenCV (Opensoft build)
  Contains openCV $PACKAGE_VERSION"
 
 apt-get -qq update;
-apt-get -qq install ca-certificates wget unzip make cmake pkg-config zlib1g-dev libgl1-mesa-dev fakeroot clang-6.0 libharfbuzz-dev liblapacke-dev libopenblas-dev libjpeg62-turbo-dev libtiff5-dev libopenexr-dev libpng-dev libopenjp2-7-dev ffmpeg libswscale-dev libgphoto2-dev -y --no-install-recommends;
+apt-get -qq install ca-certificates wget unzip make cmake git pkg-config zlib1g-dev libgl1-mesa-dev fakeroot clang-6.0 libharfbuzz-dev liblapacke-dev libopenblas-dev libjpeg62-turbo-dev libtiff5-dev libopenexr-dev libpng-dev libopenjp2-7-dev ffmpeg libswscale-dev libgphoto2-dev -y --no-install-recommends;
 
 ln -s /usr/lib/llvm-6.0/bin/clang /usr/bin/clang;
 ln -s /usr/lib/llvm-6.0/bin/clang++ /usr/bin/clang++;
@@ -53,6 +53,9 @@ unzip -q opencv-${PACKAGE_VERSION}.zip
 #unzip -q opencv_contrib-${PACKAGE_VERSION}.zip
 
 cd opencv-${PACKAGE_VERSION}
+for patch in /patch/*.patch; do
+    git apply $patch;
+done || true;
 mkdir build
 mkdir deb-package
 PACKAGE_ROOT=`pwd`/deb-package

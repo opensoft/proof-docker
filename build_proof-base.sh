@@ -43,18 +43,30 @@ docker rm qca_builder --force || true;
 
 docker run -id --name opencv_builder -v "$PREBUILT_DIR":/__deb debian:stretch-backports tail -f /dev/null;
 docker cp "$ROOT/build_helpers/build_opencv.sh" opencv_builder:/build_opencv.sh;
+docker exec opencv_builder mkdir -p /patch;
+for patch in "$ROOT"/build_helpers/patch/opencv/*.patch; do
+    docker cp $patch opencv_builder:/patch/`basename $patch`;
+done || true;
 docker exec -t opencv_builder /build_opencv.sh "$OPENCV_VERSION";
 docker rm opencv_builder --force;
 
 docker run -id --name qt_builder -v "$PREBUILT_DIR":/__deb debian:stretch-backports tail -f /dev/null;
 docker cp "$ROOT/build_helpers/extract_deb_dependencies.sh" qt_builder:/extract_deb_dependencies.sh;
 docker cp "$ROOT/build_helpers/build_qt.sh" qt_builder:/build_qt.sh;
+docker exec qt_builder mkdir -p /patch;
+for patch in "$ROOT"/build_helpers/patch/qt/*.patch; do
+    docker cp $patch qt_builder:/patch/`basename $patch`;
+done || true;
 docker exec -t qt_builder /build_qt.sh "$QT_VERSION";
 docker rm qt_builder --force;
 
 docker run -id --name qca_builder -v "$PREBUILT_DIR":/__deb debian:stretch-backports tail -f /dev/null;
 docker cp "$ROOT/build_helpers/extract_deb_dependencies.sh" qca_builder:/extract_deb_dependencies.sh;
 docker cp "$ROOT/build_helpers/build_qca.sh" qca_builder:/build_qca.sh;
+docker exec qca_builder mkdir -p /patch;
+for patch in "$ROOT"/build_helpers/patch/qca/*.patch; do
+    docker cp $patch qca_builder:/patch/`basename $patch`;
+done || true;
 docker exec -t qca_builder /build_qca.sh "$QCA_VERSION";
 docker rm qca_builder --force;
 
