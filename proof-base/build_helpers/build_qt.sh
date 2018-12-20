@@ -72,9 +72,12 @@ sed -i -re 's/(branch\s=\s)([0-9]\.[0-9]\.[0-9])/\1v\2/' .gitmodules
 # We don't need any non LGPL modules or mac/win extras
 ./init-repository --module-subset=essential,addon,-qtdoc,-qtpurchasing,-qtactiveqt,-qtcharts,-qtdatavis3d,-qtmacextras,-qtvirtualkeyboard,-qtwinextras,-qtwayland,-qtandroidextras,-qt3d,-qtcanvas3d
 
-for patch in /patch/*.patch; do
+echo;
+for patch in `(ls /patch/*.patch 2>/dev/null || true) | sort -V`; do
+    echo "Applying `basename $patch`...";
     git apply $patch;
-done || true;
+    echo "Applied.";
+done;
 
 ./configure -platform linux-clang -prefix $DEPLOY_PREFIX -extprefix $DEPLOY_EXTPREFIX -release -shared \
 -plugin-sql-psql -plugin-sql-sqlite -qt-xcb -libproxy \

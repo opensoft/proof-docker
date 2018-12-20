@@ -69,9 +69,12 @@ cd $SOURCES_DIR
 git clone $QCA_REPOSITORY qca
 cd qca
 git checkout $QCA_TAG
-for patch in /patch/*.patch; do
+echo;
+for patch in `(ls /patch/*.patch 2>/dev/null || true) | sort -V`; do
+    echo "Applying `basename $patch`...";
     git apply $patch;
-done || true;
+    echo "Applied.";
+done;
 sed -i s/-ansi/-std=c++17/ CMakeLists.txt
 export PATH=/opt/Opensoft/Qt/bin:$PATH
 cmake -DCMAKE_INSTALL_PREFIX=$DEPLOY_PREFIX -DQCA_PLUGINS_INSTALL_DIR=$DEPLOY_PREFIX/plugins -DUSE_RELATIVE_PATHS=ON -DWITH_ossl_PLUGIN=yes .

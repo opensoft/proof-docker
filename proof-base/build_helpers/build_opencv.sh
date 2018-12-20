@@ -53,9 +53,12 @@ unzip -q opencv-${PACKAGE_VERSION}.zip
 #unzip -q opencv_contrib-${PACKAGE_VERSION}.zip
 
 cd opencv-${PACKAGE_VERSION}
-for patch in /patch/*.patch; do
+echo;
+for patch in `(ls /patch/*.patch 2>/dev/null || true) | sort -V`; do
+    echo "Applying `basename $patch`...";
     git apply $patch;
-done || true;
+    echo "Applied.";
+done;
 mkdir build
 mkdir deb-package
 PACKAGE_ROOT=`pwd`/deb-package
