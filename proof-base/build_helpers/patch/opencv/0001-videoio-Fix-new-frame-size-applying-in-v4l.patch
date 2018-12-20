@@ -1,0 +1,25 @@
+From a2e008fe3964c9fdf7385de6b94a1d23bf9fe26e Mon Sep 17 00:00:00 2001
+From: Vasiliy Sorokin <vasiliy.sorokin@opensoftdev.ru>
+Date: Wed, 19 Dec 2018 15:58:04 -0800
+Subject: [PATCH] videio: Fix new frame size applying in v4l.
+
+---
+ modules/videoio/src/cap_v4l.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/videoio/src/cap_v4l.cpp b/modules/videoio/src/cap_v4l.cpp
+index 620a42e27..022a5ab4e 100644
+--- a/modules/videoio/src/cap_v4l.cpp
++++ b/modules/videoio/src/cap_v4l.cpp
+@@ -1748,7 +1748,7 @@ bool CvCaptureCAM_V4L::icvSetFrameSize(int _width, int _height)
+     if (_width > 0)
+         width_set = _width;
+ 
+-    if (height > 0)
++    if (_height > 0)
+         height_set = _height;
+ 
+     /* two subsequent calls setting WIDTH and HEIGHT will change
+-- 
+2.19.1
+
