@@ -1,0 +1,25 @@
+From 8ccdee2254b8f1fb6d0bf73d9dd1afdbe0d956ea Mon Sep 17 00:00:00 2001
+From: Denis Kormalev <denis.kormalev@opensoftdev.com>
+Date: Fri, 21 Dec 2018 15:48:45 -0800
+Subject: [PATCH] No setuid on Android by m-kuhn (see KDE/qca PR #6 at GitHub)
+
+---
+ src/qca_core.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/qca_core.cpp b/src/qca_core.cpp
+index dfb93b7..ba20db9 100644
+--- a/src/qca_core.cpp
++++ b/src/qca_core.cpp
+@@ -225,7 +225,7 @@ void init(MemoryMode mode, int prealloc)
+ 
+ 	if(drop_root)
+ 	{
+-#ifdef Q_OS_UNIX
++#if defined(Q_OS_UNIX) && !defined(Q_OS_ANDROID)
+ 		setuid(getuid());
+ #endif
+ 	}
+-- 
+2.19.1
+

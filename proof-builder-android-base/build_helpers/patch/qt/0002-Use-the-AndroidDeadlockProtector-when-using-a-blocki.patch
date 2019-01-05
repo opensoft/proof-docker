@@ -1,0 +1,52 @@
+From 6191249259719dee6f8f6eb42289e0582f1c02bc Mon Sep 17 00:00:00 2001
+From: Andy Shaw <andy.shaw@qt.io>
+Date: Thu, 3 Jan 2019 13:33:28 +0100
+Subject: [PATCH] Use the AndroidDeadlockProtector when using a blockingqueued
+ connection
+
+This amends 2afe4a1a074096a3a6476aae21e732c418717da7 to account for
+cases where it was crashing when it was using the QueuedConnection.
+The problem came from the fact it was blocking while waiting for a
+surface update which was pending to come later on, but the Android
+thread was already blocked which prevented it from being processed.
+
+Fixes: QTBUG-72101
+Change-Id: I43e355cf1a7792599f23827903d065b1b1298902
+Reviewed-by: BogDan Vatra <bogdan@kdab.com>
+---
+ src/plugins/platforms/android/qandroidinputcontext.cpp | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/qtbase/src/plugins/platforms/android/qandroidinputcontext.cpp b/qtbase/src/plugins/platforms/android/qandroidinputcontext.cpp
+index 7b3546f9bb..394e284bb6 100644
+--- a/qtbase/src/plugins/platforms/android/qandroidinputcontext.cpp
++++ b/qtbase/src/plugins/platforms/android/qandroidinputcontext.cpp
+@@ -99,13 +99,12 @@ static jfieldID m_selectionStartFieldID = 0;
+ static jfieldID m_startOffsetFieldID = 0;
+ static jfieldID m_textFieldID = 0;
+ 
+-Q_DECLARE_METATYPE(std::function<void()>)
+-
+ static void runOnQtThread(const std::function<void()> &func)
+ {
+-    const bool block = QGuiApplication::applicationState() >= Qt::ApplicationInactive;
+-    QMetaObject::invokeMethod(m_androidInputContext, "safeCall",
+-        block ? Qt::BlockingQueuedConnection : Qt::QueuedConnection, Q_ARG(std::function<void()>, func));
++    AndroidDeadlockProtector protector;
++    if (!protector.acquire())
++        return;
++    QMetaObject::invokeMethod(m_androidInputContext, "safeCall", Qt::BlockingQueuedConnection, Q_ARG(std::function<void()>, func));
+ }
+ 
+ static jboolean beginBatchEdit(JNIEnv */*env*/, jobject /*thiz*/)
+@@ -516,7 +515,6 @@ QAndroidInputContext::QAndroidInputContext()
+         m_handleMode = Hidden;
+         updateSelectionHandles();
+     });
+-    qRegisterMetaType<std::function<void()>>();
+ }
+ 
+ QAndroidInputContext::~QAndroidInputContext()
+-- 
+2.19.1
+

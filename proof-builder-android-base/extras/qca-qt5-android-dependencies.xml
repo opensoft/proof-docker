@@ -1,0 +1,5 @@
+<rules><dependencies><lib name="qca-qt5"><depends>
+<bundled file="lib/libcrypto.so" />
+<bundled file="lib/libssl.so" />
+<bundled file="plugins/crypto" />
+</depends></lib></dependencies></rules>
