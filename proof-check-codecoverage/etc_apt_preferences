@@ -1,0 +1,11 @@
+Package: *
+Pin: release o=Debian,a=stretch-backports
+Pin-Priority: 900
+
+Package: *
+Pin: release o=Debian,a=stretch
+Pin-Priority: 500
+
+Package: *
+Pin: release o=Debian,a=testing
+Pin-Priority: 100
