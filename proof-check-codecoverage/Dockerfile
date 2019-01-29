@@ -32,7 +32,7 @@ COPY etc_apt_preferences /etc/apt/preferences
 RUN rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t stretch-backports cmake make pkg-config git fakeroot libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing zlib1g-dev abi-dumper g++-8 lcov ccache ninja-build \
+    && apt-get -qq install -y --no-install-recommends -t testing zlib1g-dev abi-dumper g++ g++-8 lcov ccache ninja-build \
     && apt-get -qq remove -y lcov \
     && mkdir /extra && cd /extra \
     && git clone https://github.com/linux-test-project/lcov.git && cd lcov && make install \

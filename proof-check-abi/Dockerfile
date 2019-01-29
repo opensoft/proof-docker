@@ -30,15 +30,11 @@ COPY etc_apt_preferences /etc/apt/preferences
 
 RUN rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t stretch-backports make pkg-config git fakeroot zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper g++-8 universal-ctags ccache ninja-build \
+    && apt-get -qq install -y --no-install-recommends -t stretch-backports cmake make pkg-config git fakeroot libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
+    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper zlib1g-dev g++ g++-8 universal-ctags ccache ninja-build \
     && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \
-    && mkdir /extras && cd /extras \
-    && wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz && tar -xzf cmake-3.13.1.tar.gz && cd cmake-3.13.1 \
-    && env CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
-    && cd / && rm -rf extras \
     && /image_cleaner.sh
 
 ENV CC=/usr/lib/ccache/gcc \
