@@ -26,7 +26,7 @@
 FROM opensoftdev/proof-builder-android-base
 
 RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t testing ccache -V \
+    && apt-get -qq install -y --no-install-recommends ccache -V \
     && /image_cleaner.sh
 
 ENV PATH=/usr/lib/ccache:$PATH

@@ -23,10 +23,7 @@
 
 # Author: denis.kormalev@opensoftdev.com (Denis Kormalev)
 
-FROM debian:stretch-backports
-
-COPY etc_apt_sources.list /etc/apt/sources.list
-COPY etc_apt_preferences /etc/apt/preferences
+FROM debian:testing
 
 COPY image_cleaner.sh /image_cleaner.sh
 # stripped tar.gz with Android NDK with iconv
@@ -34,19 +31,13 @@ COPY prebuilt/ndk.tar.gz /ndk.tar.gz
 
 ADD prebuilt/Qt.tar.gz /opt/Opensoft
 
-RUN CLANG_VERSION=6.0 BUILD_DEPS="clang-$CLANG_VERSION" \
+RUN CLANG_VERSION=7 BUILD_DEPS="clang-$CLANG_VERSION" \
     && chmod +x /image_cleaner.sh \
-    && rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t stretch-backports \
-        wget ca-certificates openjdk-8-jdk xz-utils python3 git make $BUILD_DEPS \
-    && apt-get -qq install -y --no-install-recommends -t testing ninja-build \
+    && apt-get -qq install -y --no-install-recommends \
+        wget ca-certificates openjdk-8-jdk xz-utils python3 git make cmake ninja-build $BUILD_DEPS \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \
-    && mkdir /extras && cd /extras \
-    && wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz && tar -xzf cmake-3.13.1.tar.gz && cd cmake-3.13.1 \
-    && env CC=/usr/lib/llvm-$CLANG_VERSION/bin/clang CXX=/usr/lib/llvm-$CLANG_VERSION/bin/clang++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
-    && cd / && rm -rf extras \
     && apt-get -qq purge --auto-remove -y $BUILD_DEPS \
     && /image_cleaner.sh
 

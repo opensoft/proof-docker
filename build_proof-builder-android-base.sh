@@ -37,9 +37,9 @@ mkdir -p "$PREBUILT_DIR";
 docker run -id --name qt_android_builder \
     -e "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" -e "ANDROID_SDK_ROOT=/android-sdk" \
     -v "$PREBUILT_DIR":/prebuilt -v "$ROOT/extras":/extras -v "$ROOT/build_helpers":/build_helpers -v $ANDROID_SDK_ROOT:/android-sdk \
-    debian:stretch-backports tail -f /dev/null;
+    debian:testing tail -f /dev/null;
 docker exec -t qt_android_builder apt-get update;
-docker exec -t qt_android_builder apt-get -qq install -y --no-install-recommends unzip clang-6.0 g++ libclang-dev wget ca-certificates openjdk-8-jdk xz-utils python python3 git cmake make;
+docker exec -t qt_android_builder apt-get -qq install -y --no-install-recommends unzip clang-7 g++ libclang-dev wget ca-certificates openjdk-8-jdk xz-utils python python3 git cmake make;
 docker exec -t qt_android_builder git config --global advice.detachedHead false;
 docker exec -t qt_android_builder /build_helpers/build_all.sh;
 docker rm qt_android_builder --force;

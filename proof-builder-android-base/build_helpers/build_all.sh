@@ -30,7 +30,7 @@ set -e;
 export PROOF_ANDROID_NDK_VERSION=18b
 export PROOF_ANDROID_PLATFORM=28
 export PROOF_OPENSSL_VERSION=1.1.1a
-export PROOF_QT_VERSION=5.12.0
+export PROOF_QT_VERSION=5.12.1
 export PROOF_QCA_VERSION=2.2.0
 export PROOF_QRENCODE_VERSION=4.0.2
 
@@ -39,6 +39,7 @@ PREBUILT_DIR="/prebuilt"
 rm -rf "$PREBUILT_DIR/*" || true;
 mkdir -p "$PREBUILT_DIR";
 cd "$PREBUILT_DIR";
+
 wget https://dl.google.com/android/repository/android-ndk-r${PROOF_ANDROID_NDK_VERSION}-linux-x86_64.zip;
 unzip -q android-ndk-r${PROOF_ANDROID_NDK_VERSION}-linux-x86_64.zip;
 mv android-ndk-r${PROOF_ANDROID_NDK_VERSION} ndk;
@@ -60,6 +61,13 @@ rm -rf ndk/prebuilt/android-arm64;
 rm -rf ndk/prebuilt/android-x86;
 rm -rf ndk/prebuilt/android-x86_64;
 rm -rf ndk/prebuilt/linux-x86_64;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/aarch64-linux-android;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/i686-linux-android;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/x86_64-linux-android;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android;
+# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android;
+# find ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/* -maxdepth 1 -type d -not -name $PROOF_ANDROID_PLATFORM | xargs rm -rf;
 rm -rf ndk/sources/third_party;
 
 cd "$PREBUILT_DIR";
