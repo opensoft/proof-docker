@@ -34,10 +34,17 @@ PACKAGE_DESCRIPTION="OpenCV (Opensoft build)
  Contains openCV $PACKAGE_VERSION"
 
 apt-get -qq update;
-apt-get -qq install ca-certificates wget unzip make cmake git pkg-config zlib1g-dev libgl1-mesa-dev fakeroot clang-6.0 libharfbuzz-dev liblapacke-dev libopenblas-dev libjpeg62-turbo-dev libtiff5-dev libopenexr-dev libpng-dev libopenjp2-7-dev ffmpeg libswscale-dev libgphoto2-dev -y --no-install-recommends;
+apt-get -qq install ca-certificates wget unzip make cmake git pkg-config zlib1g-dev libgl1-mesa-dev fakeroot libharfbuzz-dev liblapacke-dev libopenblas-dev libjpeg62-turbo-dev libtiff5-dev libopenexr-dev libpng-dev libopenjp2-7-dev ffmpeg libswscale-dev libgphoto2-dev -y --no-install-recommends;
 
-ln -s /usr/lib/llvm-6.0/bin/clang /usr/bin/clang;
-ln -s /usr/lib/llvm-6.0/bin/clang++ /usr/bin/clang++;
+cp /etc/apt/sources.list /old_sources.list;
+echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list;
+apt-get -qq update;
+apt-get -qq install gcc-8 cpp-8 libcc1-0 libgcc-8-dev g++-8 libstdc++6 clang-7 -t testing -y --no-install-recommends;
+cp /old_sources.list /etc/apt/sources.list;
+apt-get -qq update;
+
+ln -s /usr/bin/clang-7 /usr/bin/clang;
+ln -s /usr/bin/clang++-7 /usr/bin/clang++;
 export CC=/usr/bin/clang;
 export CXX=/usr/bin/clang++;
 

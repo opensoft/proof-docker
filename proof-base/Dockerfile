@@ -29,7 +29,13 @@ COPY image_cleaner.sh /image_cleaner.sh
 COPY prebuilt/*.deb /prebuilt/
 
 RUN chmod +x /image_cleaner.sh \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list \
     && apt-get -qq update \
+    && apt-get -qq install libc6 libgcc1 libstdc++6 -t testing -y --no-install-recommends \
+    && mv /old_sources.list /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq upgrade \
     && apt-get -qq install -y --no-install-recommends wget ca-certificates \
     && cd /prebuilt && (dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends) \
     && apt-get -qq install -y --no-install-recommends jq libqrencode3 libproxy1v5 libproxy1-plugin-webkit \
@@ -37,6 +43,7 @@ RUN chmod +x /image_cleaner.sh \
     && (rm /opt/Opensoft/Qt/bin/assistant || true) && (rm /opt/Opensoft/Qt/bin/linguist || true) \
     && (rm /opt/Opensoft/Qt/bin/qdoc || true) && (rm -rf /opt/Opensoft/Qt/doc || true) && (rm -rf /opt/Opensoft/Qt/share || true) \
     && rm -rf /prebuilt && /image_cleaner.sh
+
 
 ENV QTDIR=/opt/Opensoft/Qt \
     LD_LIBRARY_PATH=/opt/Opensoft/Qt/lib:$LD_LIBRARY_PATH \

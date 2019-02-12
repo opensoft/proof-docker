@@ -28,23 +28,20 @@ FROM opensoftdev/proof-base
 COPY etc_apt_sources.list /etc/apt/sources.list
 COPY etc_apt_preferences /etc/apt/preferences
 
-RUN CLANG_VERSION=6.0 \
+RUN CLANG_VERSION=7 \
     && rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t stretch-backports \
-        make pkg-config git fakeroot \
-        clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
-        zlib1g-dev libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
+        make cmake pkg-config git fakeroot \
+        libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
     && apt-get -qq install -y --no-install-recommends -t testing ninja-build \
+        gcc-8 cpp-8 libcc1-0 libgcc-8-dev g++ g++-8 libstdc++6 zlib1g-dev \
+        clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
     && mkdir /sandbox \
-    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang /usr/bin/clang \
-    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang++ /usr/bin/clang++ \
-    && ln -s /usr/lib/llvm-$CLANG_VERSION/bin/clang-format /usr/bin/clang-format \
+    && ln -s /usr/bin/clang-$CLANG_VERSION /usr/bin/clang \
+    && ln -s /usr/bin/clang++-$CLANG_VERSION /usr/bin/clang++ \
+    && ln -s /usr/bin/clang-format-$CLANG_VERSION /usr/bin/clang-format \
     && git config --global advice.detachedHead false \
-    && mkdir /extras && cd /extras \
-    && wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz && tar -xzf cmake-3.13.1.tar.gz && cd cmake-3.13.1 \
-    && env CC=/usr/bin/clang CXX=/usr/bin/clang++ ./bootstrap -- -DCMAKE_BUILD_TYPE=Release && make -j4 && make install \
-    && cd / && rm -rf extras \
     && /image_cleaner.sh
 
 ENV CC=/usr/bin/clang \
