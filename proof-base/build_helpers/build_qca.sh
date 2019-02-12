@@ -42,11 +42,19 @@ QCA_TAG="da4d1d06d4f67104738cb027b215eb41293c85cd"
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 apt-get -qq update;
-apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev fakeroot clang-6.0 libssl-dev -y --no-install-recommends;
+apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev fakeroot libssl-dev -y --no-install-recommends;
+
+cp /etc/apt/sources.list /old_sources.list;
+echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list;
+apt-get -qq update;
+apt-get -qq install gcc-8 cpp-8 libcc1-0 libgcc-8-dev g++-8 libstdc++6 clang-7 -t testing -y --no-install-recommends;
+cp /old_sources.list /etc/apt/sources.list;
+apt-get -qq update;
+
 dpkg -i /__deb/qt5-opensoft*.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends;
 
-ln -s /usr/lib/llvm-6.0/bin/clang /usr/bin/clang;
-ln -s /usr/lib/llvm-6.0/bin/clang++ /usr/bin/clang++;
+ln -s /usr/bin/clang-7 /usr/bin/clang;
+ln -s /usr/bin/clang++-7 /usr/bin/clang++;
 export CC=/usr/bin/clang;
 export CXX=/usr/bin/clang++;
 

@@ -27,8 +27,8 @@
 
 set -e;
 
-OPENCV_VERSION=4.0.0
-QT_VERSION=5.12.0
+OPENCV_VERSION=4.0.1
+QT_VERSION=5.12.1
 QCA_VERSION=2.2.0
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/proof-base"

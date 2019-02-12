@@ -39,10 +39,17 @@ QT_TAG="v$PACKAGE_VERSION"
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 apt-get -qq update;
-apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev  fakeroot clang-6.0 python3 python ruby gperf bison flex libicu-dev libxslt-dev libproxy-dev libproxy1-plugin-webkit libfontconfig1-dev libfreetype6-dev libssl-dev libxkbcommon-x11-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libpq-dev libdbus-1-dev libharfbuzz-dev libjpeg62-turbo-dev libpng-dev libinput-dev libmtdev-dev libxcomposite-dev libxcursor-dev libxrandr-dev libxdamage-dev libcap-dev libpulse-dev libudev-dev libpci-dev libasound2-dev libxss-dev libbz2-dev libgcrypt11-dev libdrm-dev libcups2-dev libatkmm-1.6-dev libxtst-dev libnss3-dev libatspi2.0-dev libgstreamermm-1.0-dev -y --no-install-recommends;
+apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev  fakeroot python3 python ruby gperf bison flex libicu-dev libxslt-dev libproxy-dev libproxy1-plugin-webkit libfontconfig1-dev libfreetype6-dev libssl-dev libxkbcommon-x11-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libpq-dev libdbus-1-dev libharfbuzz-dev libjpeg62-turbo-dev libpng-dev libinput-dev libmtdev-dev libxcomposite-dev libxcursor-dev libxrandr-dev libxdamage-dev libcap-dev libpulse-dev libudev-dev libpci-dev libasound2-dev libxss-dev libbz2-dev libgcrypt11-dev libdrm-dev libcups2-dev libatkmm-1.6-dev libxtst-dev libnss3-dev libatspi2.0-dev libgstreamermm-1.0-dev -y --no-install-recommends;
 
-ln -s /usr/lib/llvm-6.0/bin/clang /usr/bin/clang;
-ln -s /usr/lib/llvm-6.0/bin/clang++ /usr/bin/clang++;
+cp /etc/apt/sources.list /old_sources.list;
+echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list;
+apt-get -qq update;
+apt-get -qq install gcc-8 cpp-8 libcc1-0 libgcc-8-dev g++-8 libstdc++6 clang-7 -t testing -y --no-install-recommends;
+cp /old_sources.list /etc/apt/sources.list;
+apt-get -qq update;
+
+ln -s /usr/bin/clang-7 /usr/bin/clang;
+ln -s /usr/bin/clang++-7 /usr/bin/clang++;
 export CC=/usr/bin/clang;
 export CXX=/usr/bin/clang++;
 
@@ -81,7 +88,7 @@ done;
 
 ./configure -platform linux-clang -prefix $DEPLOY_PREFIX -extprefix $DEPLOY_EXTPREFIX -release -shared \
 -plugin-sql-psql -plugin-sql-sqlite -qt-xcb -libproxy \
--openssl-linked -c++std c++1y -dbus-linked -fontconfig -nomake examples -nomake tests -no-gtk -no-qml-debug \
+-openssl-linked -c++std c++1z -dbus-linked -fontconfig -nomake examples -nomake tests -no-gtk -no-qml-debug \
 -opensource -confirm-license -silent -no-use-gold-linker
 
 make -j $BUILDING_THREADS_COUNT
