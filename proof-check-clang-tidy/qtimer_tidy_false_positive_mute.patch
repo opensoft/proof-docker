@@ -1,0 +1,22 @@
+diff --git a/opt/Opensoft/Qt/include/QtCore/qtimer.h b/opt/Opensoft/Qt/include/QtCore/qtimer.h
+index 66f317c..2c0ce4a 100644
+--- a/opt/Opensoft/Qt/include/QtCore/qtimer.h
++++ b/opt/Opensoft/Qt/include/QtCore/qtimer.h
+@@ -121,7 +121,7 @@ public:
+
+         singleShotImpl(interval, timerType, receiver,
+                        new QtPrivate::QSlotObject<Func1, typename SlotType::Arguments, void>(slot));
+-    }
++    } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+     // singleShot to a functor or function pointer (without context)
+     template <typename Duration, typename Func1>
+     static inline typename std::enable_if<!QtPrivate::FunctionPointer<Func1>::IsPointerToMemberFunction &&
+@@ -157,7 +157,7 @@ public:
+         singleShotImpl(interval, timerType, context,
+                        new QtPrivate::QFunctorSlotObject<Func1, 0,
+                             typename QtPrivate::List_Left<void, 0>::Value, void>(std::move(slot)));
+-    }
++    } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+
+     template <typename ... Args>
+     QMetaObject::Connection callOnTimeout(Args && ...args)

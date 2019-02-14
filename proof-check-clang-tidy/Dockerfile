@@ -26,11 +26,14 @@
 FROM opensoftdev/proof-builder-base
 
 COPY run-clang-tidy-opensoft.py /usr/bin/run-clang-tidy-opensoft.py
+COPY qtimer_tidy_false_positive_mute.patch /qtimer_tidy_false_positive_mute.patch
 
 RUN CLANG_VERSION=7 \
     && chmod +x /usr/bin/run-clang-tidy-opensoft.py \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t testing clang-tidy-$CLANG_VERSION \
+    && apt-get -qq install -y --no-install-recommends -t testing patch clang-tidy-$CLANG_VERSION \
     && ln -s /usr/bin/clang-tidy-$CLANG_VERSION /usr/bin/clang-tidy \
     && git config --global advice.detachedHead false \
+    && patch -p1 < qtimer_tidy_false_positive_mute.patch \
+    && apt-get -qq purge patch \
     && /image_cleaner.sh
