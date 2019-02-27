@@ -31,7 +31,7 @@ COPY qtimer_tidy_false_positive_mute.patch /qtimer_tidy_false_positive_mute.patc
 RUN CLANG_VERSION=7 \
     && chmod +x /usr/bin/run-clang-tidy-opensoft.py \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t testing patch clang-tidy-$CLANG_VERSION \
+    && apt-get -qq install -y --no-install-recommends -t testing patch clang-tidy-$CLANG_VERSION libc++-$CLANG_VERSION-dev \
     && ln -s /usr/bin/clang-tidy-$CLANG_VERSION /usr/bin/clang-tidy \
     && git config --global advice.detachedHead false \
     && patch -p1 < qtimer_tidy_false_positive_mute.patch \
