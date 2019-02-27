@@ -33,6 +33,7 @@ RUN CLANG_VERSION=7 \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t testing patch clang-tidy-$CLANG_VERSION libc++-$CLANG_VERSION-dev \
     && ln -s /usr/bin/clang-tidy-$CLANG_VERSION /usr/bin/clang-tidy \
+    && ln -s /usr/lib/x86_64-linux-gnu/libc++abi.so.1 /usr/lib/x86_64-linux-gnu/libc++abi.so \
     && git config --global advice.detachedHead false \
     && patch -p1 < qtimer_tidy_false_positive_mute.patch \
     && apt-get -qq purge patch \
