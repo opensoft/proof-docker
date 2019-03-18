@@ -27,6 +27,11 @@
 
 set -e;
 
+if [ -z "$ANDROID_SDK_ROOT" ]; then
+    echo "ANDROID_SDK_ROOT environment variable is not set"
+    exit 1
+fi
+
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/proof-builder-android-base"
 PREBUILT_DIR="$ROOT/prebuilt"
 
