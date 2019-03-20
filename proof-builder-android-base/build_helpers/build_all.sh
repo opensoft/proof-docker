@@ -27,7 +27,7 @@
 
 set -e;
 
-export PROOF_ANDROID_NDK_VERSION=18b
+export PROOF_ANDROID_NDK_VERSION=19c
 export PROOF_ANDROID_PLATFORM=28
 export PROOF_OPENSSL_VERSION=1.1.1b
 export PROOF_QT_VERSION=5.12.2
@@ -54,20 +54,18 @@ mv ndk/platforms/_android-$PROOF_ANDROID_PLATFORM ndk/platforms/android-$PROOF_A
 rm -rf ndk/platforms/android-$PROOF_ANDROID_PLATFORM/arch-arm64;
 rm -rf ndk/platforms/android-$PROOF_ANDROID_PLATFORM/arch-x86;
 rm -rf ndk/platforms/android-$PROOF_ANDROID_PLATFORM/arch-x86_64;
-rm -rf ndk/toolchains/aarch64-linux-android-4.9;
 rm -rf ndk/toolchains/renderscript;
-rm -rf ndk/toolchains/x86_64-4.9;
 rm -rf ndk/prebuilt/android-arm64;
 rm -rf ndk/prebuilt/android-x86;
 rm -rf ndk/prebuilt/android-x86_64;
 rm -rf ndk/prebuilt/linux-x86_64;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/aarch64-linux-android;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/i686-linux-android;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/x86_64-linux-android;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android;
-# rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android;
-# find ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/* -maxdepth 1 -type d -not -name $PROOF_ANDROID_PLATFORM | xargs rm -rf;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/aarch64-linux-android;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/i686-linux-android;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/x86_64-linux-android;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android;
+rm -rf ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android;
+find ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/* -maxdepth 1 -type d -not -name $PROOF_ANDROID_PLATFORM | xargs rm -rf;
 rm -rf ndk/sources/third_party;
 
 cd "$PREBUILT_DIR";
