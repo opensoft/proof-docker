@@ -28,16 +28,13 @@
 set -e;
 
 PACKAGE_NAME="qca-opensoft"
-# Enable it back when QCA 2.2.0 release will happen
-# PACKAGE_VERSION=$1
-PACKAGE_VERSION="2.2.0-20180619-da4d1d0"
+PACKAGE_VERSION=$1
 PACKAGE_MAINTAINER="Denis Kormalev <denis.kormalev@opensoftdev.com>"
 PACKAGE_DESCRIPTION="QCA for Qt5 (Opensoft build)
  Contains QCA $PACKAGE_VERSION"
 
 QCA_REPOSITORY="git://anongit.kde.org/qca.git"
-# QCA_TAG="v$PACKAGE_VERSION"
-QCA_TAG="da4d1d06d4f67104738cb027b215eb41293c85cd"
+QCA_TAG="v$PACKAGE_VERSION"
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

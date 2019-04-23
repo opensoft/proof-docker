@@ -33,6 +33,7 @@ ADD prebuilt/Qt.tar.gz /opt/Opensoft
 
 RUN CLANG_VERSION=7 BUILD_DEPS="clang-$CLANG_VERSION" \
     && chmod +x /image_cleaner.sh \
+    && echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.list \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
         wget ca-certificates openjdk-8-jdk xz-utils python3 git make cmake ninja-build $BUILD_DEPS \

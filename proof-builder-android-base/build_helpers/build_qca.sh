@@ -27,10 +27,9 @@
 
 set -e;
 
-QCA_REPOSITORY="https://github.com/KDE/qca.git"
-# QCA_REPOSITORY="git://anongit.kde.org/qca.git"
-# QCA_TAG="v$PROOF_QCA_VERSION"
-QCA_TAG="da4d1d06d4f67104738cb027b215eb41293c85cd"
+# QCA_REPOSITORY="https://github.com/KDE/qca.git"
+QCA_REPOSITORY="git://anongit.kde.org/qca.git"
+QCA_TAG="v$PROOF_QCA_VERSION"
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -39,7 +38,6 @@ PACKAGE_ROOT="$BUILD_ROOT/package"
 DEPLOY_PREFIX="/opt/Opensoft/Qt"
 SOURCES_DIR="$BUILD_ROOT/src"
 BUILDING_THREADS_COUNT=$(( $(cat /proc/cpuinfo | grep processor | wc -l) + 1 ))
-PACKAGE_FILEPATH="/__deb/${PACKAGE_NAME}-${PACKAGE_VERSION}.deb"
 
 echo "Starting QCA build."
 echo "QCA repo: $QCA_REPOSITORY"

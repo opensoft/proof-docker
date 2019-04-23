@@ -37,7 +37,6 @@ PACKAGE_ROOT="$BUILD_ROOT/package"
 DEPLOY_PREFIX="/opt/Opensoft/Qt"
 SOURCES_DIR="$BUILD_ROOT/src"
 BUILDING_THREADS_COUNT=$(( $(cat /proc/cpuinfo | grep processor | wc -l) + 1 ))
-PACKAGE_FILEPATH="/__deb/${PACKAGE_NAME}-${PACKAGE_VERSION}.deb"
 
 echo "Starting qrencode build."
 echo "qrencode repo: $QRENCODE_REPOSITORY"

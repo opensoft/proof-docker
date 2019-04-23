@@ -27,29 +27,18 @@
 
 set -e;
 
-if [ -z "$ANDROID_SDK_ROOT" ]; then
-    echo "ANDROID_SDK_ROOT environment variable is not set"
-    exit 1
-fi
+IMAGES="proof-runner proof-builder-base proof-builder-ccache proof-builder-clazy proof-check-codestyle proof-check-codecoverage proof-check-abi proof-check-clang-tidy"
 
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/proof-builder-android-base"
-PREBUILT_DIR="$ROOT/prebuilt"
+for image in $IMAGES; do
+    docker image rm -f opensoftdev/$image;
+done
 
-docker rm qt_android_builder --force || true;
+docker image prune -f;
 
-sudo rm -rf "$PREBUILT_DIR";
-mkdir -p "$PREBUILT_DIR";
-docker run -id --name qt_android_builder \
-    -e "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" -e "ANDROID_SDK_ROOT=/android-sdk" \
-    -v "$PREBUILT_DIR":/prebuilt -v "$ROOT/extras":/extras -v "$ROOT/build_helpers":/build_helpers -v $ANDROID_SDK_ROOT:/android-sdk \
-    debian:testing tail -f /dev/null;
-docker exec -t qt_android_builder bash -c 'echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.list';
-docker exec -t qt_android_builder apt-get update;
-docker exec -t qt_android_builder apt-get -qq install -y --no-install-recommends unzip clang-7 g++ libclang-dev wget ca-certificates openjdk-8-jdk xz-utils python python3 git cmake make;
-docker exec -t qt_android_builder git config --global advice.detachedHead false;
-docker exec -t qt_android_builder /build_helpers/build_all.sh;
-docker rm qt_android_builder --force;
+for image in $IMAGES; do
+    docker build -t opensoftdev/$image -f "$image/Dockerfile" "$image/";
+done
 
-docker build --force-rm --no-cache -t opensoftdev/proof-builder-android-base -f "$ROOT/Dockerfile" "$ROOT/";
-
-docker push opensoftdev/proof-builder-android-base;
+for image in $IMAGES; do
+    docker push opensoftdev/$image;
+done

@@ -30,7 +30,7 @@ set -e;
 export PROOF_ANDROID_NDK_VERSION=19c
 export PROOF_ANDROID_PLATFORM=28
 export PROOF_OPENSSL_VERSION=1.1.1b
-export PROOF_QT_VERSION=5.12.2
+export PROOF_QT_VERSION=5.12.3
 export PROOF_QCA_VERSION=2.2.0
 export PROOF_QRENCODE_VERSION=4.0.2
 
@@ -74,7 +74,9 @@ tar -xzf iconv.tar.gz;
 rm -rf iconv.tar.gz;
 tar -czf ndk.tar.gz ndk;
 
-export ANDROID_NDK_ROOT="$PREBUILT_DIR"/ndk;
+export ANDROID_NDK_ROOT=/opt/android/ndk;
+mkdir -p /opt/android;
+cp -R "$PREBUILT_DIR"/ndk /opt/android/ndk;
 /build_helpers/build_openssl.sh;
 /build_helpers/build_qt.sh;
 /build_helpers/build_qca.sh;
