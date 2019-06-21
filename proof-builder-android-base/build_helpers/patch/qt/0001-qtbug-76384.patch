@@ -1,0 +1,29 @@
+From ed0b4ed792504dc68d2f009ca19d69ef856002ba Mon Sep 17 00:00:00 2001
+From: Lorn Potter <lorn.potter@gmail.com>
+Date: Mon, 17 Jun 2019 18:56:06 +1000
+Subject: fix typo that breaks android build
+
+Fixes: QTBUG-76384
+Change-Id: Ib1977ea1371e3a82ca14d1c7c450984fa40cd71d
+Reviewed-by: Vyacheslav Koscheev <vok1980@gmail.com>
+Reviewed-by: Alex Blasche <alexander.blasche@qt.io>
+---
+ qtsensors/src/plugins/sensors/android/sensormanager.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qtsensors/src/plugins/sensors/android/sensormanager.cpp b/qtsensors/src/plugins/sensors/android/sensormanager.cpp
+index 590f478c..542e54c9 100644
+--- a/qtsensors/src/plugins/sensors/android/sensormanager.cpp
++++ b/qtsensors/src/plugins/sensors/android/sensormanager.cpp
+@@ -73,7 +73,7 @@ ALooper *SensorManager::looper() const
+ static inline ASensorManager* androidManager()
+ {
+ #if __ANDROID_API__ >= 26
+-    retrun ASensorManager_getInstanceForPackage(QJNIObjectPrivate{QtAndroidPrivate::context()}
++    return ASensorManager_getInstanceForPackage(QJNIObjectPrivate{QtAndroidPrivate::context()}
+                                                 .callObjectMethod("getPackageName", "()Ljava/lang/String;")
+                                                 .toString().toUtf8().constData());
+ #else
+--
+cgit v1.2.1
+

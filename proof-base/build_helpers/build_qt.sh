@@ -28,18 +28,21 @@
 set -e
 
 PACKAGE_NAME="qt5-opensoft"
-PACKAGE_VERSION=$1
+PACKAGE_VERSION=$1.$2
 PACKAGE_MAINTAINER="Denis Kormalev <denis.kormalev@opensoftdev.com>"
 PACKAGE_DESCRIPTION="Qt5 (Opensoft build)
  Contains Qt5 $PACKAGE_VERSION"
 
-QT_REPOSITORY="git://code.qt.io/qt/qt5.git"
-QT_TAG="v$PACKAGE_VERSION"
+QT_MODULES_WHITELIST="qtandroidextras qtbase qtconnectivity qtdeclarative qtgraphicaleffects qtimageformats qtlocation qtmultimedia qtnetworkauth qtquickcontrols qtquickcontrols2 qtremoteobjects qtscxml qtsensors qtserialbus qtserialport qtsvg qttools qttranslations qtwebchannel qtwebengine qtwebsockets qtwebview qtx11extras";
+
+QT_SRC_FILENAME="qt-everywhere-src-$1.$2.tar.xz"
+QT_DOWNLOAD_URL="http://download.qt.io/official_releases/qt/$1/$1.$2/single/$QT_SRC_FILENAME"
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 apt-get -qq update;
-apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev  fakeroot python3 python ruby gperf bison flex libicu-dev libxslt-dev libproxy-dev libproxy1-plugin-webkit libfontconfig1-dev libfreetype6-dev libssl-dev libxkbcommon-x11-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libpq-dev libdbus-1-dev libharfbuzz-dev libjpeg62-turbo-dev libpng-dev libinput-dev libmtdev-dev libxcomposite-dev libxcursor-dev libxrandr-dev libxdamage-dev libcap-dev libpulse-dev libudev-dev libpci-dev libasound2-dev libxss-dev libbz2-dev libgcrypt11-dev libdrm-dev libcups2-dev libatkmm-1.6-dev libxtst-dev libnss3-dev libatspi2.0-dev libgstreamermm-1.0-dev -y --no-install-recommends;
+apt-get -qq install wget ca-certificates git make cmake pkg-config zlib1g-dev libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev  fakeroot python3 python ruby gperf bison flex libicu-dev libxslt-dev libproxy-dev libproxy1-plugin-webkit libfontconfig1-dev libfreetype6-dev libssl-dev libxkbcommon-x11-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libpq-dev libdbus-1-dev libharfbuzz-dev libjpeg62-turbo-dev libpng-dev libinput-dev libmtdev-dev libxcomposite-dev libxcursor-dev libxrandr-dev libxdamage-dev libcap-dev libpulse-dev libudev-dev libpci-dev libasound2-dev libxss-dev libbz2-dev libgcrypt11-dev libdrm-dev libcups2-dev libatkmm-1.6-dev libxtst-dev libnss3-dev libatspi2.0-dev libgstreamermm-1.0-dev -y --no-install-recommends;
+apt-get -qq install libzstd-dev -t stretch-backports -y --no-install-recommends;
 
 cp /etc/apt/sources.list /old_sources.list;
 echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list;
@@ -63,21 +66,21 @@ PACKAGE_FILEPATH="/__deb/${PACKAGE_NAME}-${PACKAGE_VERSION}.deb"
 
 echo "Starting Qt package build."
 echo "Final package will be at $PACKAGE_FILEPATH"
-echo "Qt repo: $QT_REPOSITORY"
-echo "Qt tag: $QT_TAG"
+echo "Qt sources URL: $QT_DOWNLOAD_URL"
 
 mkdir -p $SOURCES_DIR
 cd $SOURCES_DIR
-git clone $QT_REPOSITORY qt5
-cd qt5
-git checkout $QT_TAG
+wget $QT_DOWNLOAD_URL
+tar -xJf $QT_SRC_FILENAME;
+rm $QT_SRC_FILENAME;
+mv qt-everywhere-src-* qt5;
+cd qt5;
 
-# Before new version release Qt breaks repository and changes branches that were used in gitmodules. This replacement changes it to tags usage
-sed -i -re 's/(branch\s=\s)([0-9]\.[0-9]\.[0-9])/\1v\2/' .gitmodules
-
-# We need only essential and addon modules here, no deprecated or techpreview
-# We don't need any non LGPL modules or mac/win extras
-./init-repository --module-subset=essential,addon,-qtdoc,-qtpurchasing,-qtactiveqt,-qtcharts,-qtdatavis3d,-qtmacextras,-qtvirtualkeyboard,-qtwinextras,-qtwayland,-qtandroidextras,-qt3d,-qtcanvas3d
+mkdir ../protected;
+mv $QT_MODULES_WHITELIST ../protected/;
+find -maxdepth 1 -type d -name "qt*" | xargs rm -rf;
+mv ../protected/* ./;
+rm -rf ../protected;
 
 echo;
 for patch in `(ls /patch/*.patch 2>/dev/null || true) | sort -V`; do
@@ -93,6 +96,11 @@ done;
 
 make -j $BUILDING_THREADS_COUNT
 make install
+
+mkdir -p $DEPLOY_EXTPREFIX/include;
+mkdir -p $DEPLOY_EXTPREFIX/src;
+cp -R qtandroidextras/include/QtAndroidExtras $DEPLOY_EXTPREFIX/include/QtAndroidExtras;
+cp -R qtandroidextras/src/androidextras $DEPLOY_EXTPREFIX/src/androidextras;
 
 export IGNORE_PACKAGES_PATTERN="libqt:qt5"
 DEPENDS="`/$ROOT/extract_deb_dependencies.sh -v $DEPLOY_EXTPREFIX | paste -s -d,`"

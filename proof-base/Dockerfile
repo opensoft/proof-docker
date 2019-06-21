@@ -32,6 +32,7 @@ RUN chmod +x /image_cleaner.sh \
     && cp /etc/apt/sources.list /old_sources.list \
     && echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list \
     && apt-get -qq update \
+    && apt-get -qq install libzstd-dev -t stretch-backports -y --no-install-recommends \
     && apt-get -qq install libc6 libgcc1 libstdc++6 zlib1g -t testing -y --no-install-recommends \
     && mv /old_sources.list /etc/apt/sources.list \
     && apt-get -qq update \

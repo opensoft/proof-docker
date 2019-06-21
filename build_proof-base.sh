@@ -28,8 +28,9 @@
 set -e;
 
 OPENCV_VERSION=4.1.0
-QT_VERSION=5.12.3
-QCA_VERSION=2.2.0
+QT_VERSION=5.13
+QT_VERSION_PATCH=0
+QCA_VERSION=2.2.1
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/proof-base"
 PREBUILT_DIR="$ROOT/prebuilt"
@@ -57,7 +58,7 @@ docker exec qt_builder mkdir -p /patch;
 for patch in "$ROOT"/build_helpers/patch/qt/*.patch; do
     docker cp $patch qt_builder:/patch/`basename $patch`;
 done || true;
-docker exec -t qt_builder /build_qt.sh "$QT_VERSION";
+docker exec -t qt_builder /build_qt.sh "$QT_VERSION" "$QT_VERSION_PATCH";
 docker rm qt_builder --force;
 
 docker run -id --name qca_builder -v "$PREBUILT_DIR":/__deb debian:stretch-backports tail -f /dev/null;

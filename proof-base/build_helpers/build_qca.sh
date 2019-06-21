@@ -40,6 +40,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 apt-get -qq update;
 apt-get -qq install ca-certificates git make cmake pkg-config zlib1g-dev fakeroot libssl-dev -y --no-install-recommends;
+apt-get -qq install libzstd-dev -t stretch-backports -y --no-install-recommends;
 
 cp /etc/apt/sources.list /old_sources.list;
 echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list;
@@ -82,7 +83,8 @@ for patch in `(ls /patch/*.patch 2>/dev/null || true) | sort -V`; do
 done;
 sed -i s/-ansi/-std=c++17/ CMakeLists.txt
 export PATH=/opt/Opensoft/Qt/bin:$PATH
-cmake -DCMAKE_INSTALL_PREFIX=$DEPLOY_PREFIX -DQCA_PLUGINS_INSTALL_DIR=$DEPLOY_PREFIX/plugins -DUSE_RELATIVE_PATHS=ON -DWITH_ossl_PLUGIN=yes .
+
+cmake -DCMAKE_PREFIX_PATH=$QT_PATH -DUSE_RELATIVE_PATHS=ON -DWITH_ossl_PLUGIN=yes  .
 make -j$BUILDING_THREADS_COUNT
 make DESTDIR=$PACKAGE_ROOT install
 

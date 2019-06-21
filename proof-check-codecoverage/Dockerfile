@@ -35,7 +35,7 @@ RUN rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq install -y --no-install-recommends -t testing zlib1g-dev abi-dumper g++ g++-8 lcov ccache ninja-build \
     && apt-get -qq remove -y lcov \
     && mkdir /extra && cd /extra \
-    && git clone https://github.com/linux-test-project/lcov.git && cd lcov && make install \
+    && git clone https://github.com/linux-test-project/lcov.git && cd lcov && git checkout v1.14 && make install \
     && cd / && rm -rf /extra \
     && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
