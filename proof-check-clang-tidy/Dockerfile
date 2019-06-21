@@ -30,7 +30,9 @@ COPY qtimer_tidy_false_positive_mute.patch /qtimer_tidy_false_positive_mute.patc
 
 RUN CLANG_VERSION=7 \
     && chmod +x /usr/bin/run-clang-tidy-opensoft.py \
+    && mkdir -p /usr/share/man/man1 \
     && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends openjdk-8-jdk-headless \
     && apt-get -qq install -y --no-install-recommends -t testing patch clang-tidy-$CLANG_VERSION libc++-$CLANG_VERSION-dev \
     && ln -s /usr/bin/clang-tidy-$CLANG_VERSION /usr/bin/clang-tidy \
     && ln -s /usr/lib/x86_64-linux-gnu/libc++abi.so.1 /usr/lib/x86_64-linux-gnu/libc++abi.so \
