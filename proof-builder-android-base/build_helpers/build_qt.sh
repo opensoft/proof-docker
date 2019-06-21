@@ -29,8 +29,10 @@
 
 set -e
 
-QT_REPOSITORY="git://code.qt.io/qt/qt5.git"
-QT_TAG="v$PROOF_QT_VERSION"
+QT_MODULES_WHITELIST="qtandroidextras qtbase qtconnectivity qtdeclarative qtgraphicaleffects qtimageformats qtlocation qtmultimedia qtnetworkauth qtquickcontrols qtquickcontrols2 qtremoteobjects qtscxml qtsensors qtsvg qttools qttranslations qtwebchannel qtwebsockets qtwebview";
+
+QT_SRC_FILENAME="qt-everywhere-src-$PROOF_QT_VERSION.$PROOF_QT_VERSION_PATCH.tar.xz"
+QT_DOWNLOAD_URL="http://download.qt.io/official_releases/qt/$PROOF_QT_VERSION/$PROOF_QT_VERSION.$PROOF_QT_VERSION_PATCH/single/$QT_SRC_FILENAME"
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -42,8 +44,7 @@ SOURCES_DIR="$BUILD_ROOT/src"
 BUILDING_THREADS_COUNT=$(( $(cat /proc/cpuinfo | grep processor | wc -l) + 1 ))
 
 echo "Starting Qt build."
-echo "Qt repo: $QT_REPOSITORY"
-echo "Qt tag: $QT_TAG"
+echo "Qt sources URL: $QT_DOWNLOAD_URL"
 
 mkdir -p $BUILD_ROOT/deps
 cd $BUILD_ROOT/deps
@@ -52,16 +53,11 @@ tar -xzf OpenSSL.tar.gz
 
 mkdir -p $SOURCES_DIR
 cd $SOURCES_DIR
-git clone $QT_REPOSITORY qt5
-cd qt5
-git checkout $QT_TAG
-
-# Before new version release Qt breaks repository and changes branches that were used in gitmodules. This replacement changes it to tags usage
-sed -i -re 's/(branch\s=\s)([0-9]\.[0-9]\.[0-9])/\1v\2/' .gitmodules
-
-# We need only essential and addon modules here, no deprecated or techpreview
-# We don't need any non LGPL modules or mac/win extras
-./init-repository --module-subset=essential,addon,-qtdoc,-qtpurchasing,-qtactiveqt,-qtcharts,-qtdatavis3d,-qtmacextras,-qtvirtualkeyboard,-qtwinextras,-qtwayland,-qtx11extras,-qt3d,-qtcanvas3d,-qtwebengine
+wget $QT_DOWNLOAD_URL
+tar -xJf $QT_SRC_FILENAME;
+rm $QT_SRC_FILENAME;
+mv qt-everywhere-src-* qt5;
+cd qt5;
 
 echo;
 for patch in `(ls $ROOT/patch/qt/*.patch 2>/dev/null || true) | sort -V`; do
