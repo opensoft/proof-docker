@@ -72,8 +72,10 @@ docker exec -t qca_builder /build_qca.sh "$QCA_VERSION";
 docker rm qca_builder --force;
 
 docker build --squash --force-rm --no-cache -t opensoftdev/proof-base -f "$ROOT/Dockerfile" "$ROOT/";
+docker build --squash --force-rm --no-cache -t opensoftdev/proof-app-deploy-base -f "$ROOT/Dockerfile.app-deploy" "$ROOT/";
 
 for prebuilt in "$PREBUILT_DIR"/*.deb; do
     aws s3 cp "$prebuilt" "s3://proof.travis.builds/__dependencies/`basename $prebuilt`";
 done
 docker push opensoftdev/proof-base;
+docker push opensoftdev/proof-app-deploy-base;
