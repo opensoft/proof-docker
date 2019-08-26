@@ -37,6 +37,9 @@ RUN chmod +x /image_cleaner.sh \
     && mv /old_sources.list /etc/apt/sources.list \
     && apt-get -qq update \
     && apt-get -qq dist-upgrade -y --no-install-recommends \
+    && apt-get -qq install -y --no-install-recommends debconf-utils \
+    && echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections \
+    && apt-get -qq install -y --no-install-recommends resolvconf \
     && apt-get -qq install -y --no-install-recommends wget ca-certificates \
     && cd /prebuilt && (dpkg -i *.deb 2> /dev/null || apt-get -qq -f install -y --no-install-recommends) \
     && apt-get -qq install -y --no-install-recommends jq libqrencode3 libproxy1v5 libproxy1-plugin-webkit \
