@@ -25,8 +25,12 @@
 
 FROM opensoftdev/proof-builder-base
 
-RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t testing ccache \
+RUN cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq install -t buster -y --no-install-recommends ccache \
+        clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
+    && mv /old_sources.list /etc/apt/sources.list \
     && /usr/sbin/update-ccache-symlinks \
     && /image_cleaner.sh
 

@@ -25,18 +25,19 @@
 
 FROM opensoftdev/proof-base
 
-COPY etc_apt_sources.list /etc/apt/sources.list
-COPY etc_apt_preferences /etc/apt/preferences
-
 RUN CLANG_VERSION=7 \
-    && rm /etc/apt/sources.list.d/backports.list \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t stretch-backports \
         make cmake pkg-config git fakeroot \
         libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing ninja-build \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq install -t buster -y --no-install-recommends ninja-build \
         gcc-8 cpp-8 libcc1-0 libgcc-8-dev g++ g++-8 libstdc++6 zlib1g-dev \
         clang-$CLANG_VERSION clang-format-$CLANG_VERSION \
+    && mv /old_sources.list /etc/apt/sources.list \
+    && apt-get -qq update \
     && mkdir /sandbox \
     && ln -s /usr/bin/clang-$CLANG_VERSION /usr/bin/clang \
     && ln -s /usr/bin/clang++-$CLANG_VERSION /usr/bin/clang++ \

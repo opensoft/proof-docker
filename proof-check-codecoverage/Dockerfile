@@ -25,18 +25,13 @@
 
 FROM opensoftdev/proof-base
 
-COPY etc_apt_sources.list /etc/apt/sources.list
-COPY etc_apt_preferences /etc/apt/preferences
-
-# Switch to system lcov when 1.14 will be released
-RUN rm /etc/apt/sources.list.d/backports.list \
-    && apt-get -qq update \
+RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t stretch-backports cmake make pkg-config git fakeroot libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing zlib1g-dev abi-dumper g++ g++-8 lcov ccache ninja-build \
-    && apt-get -qq remove -y lcov \
-    && mkdir /extra && cd /extra \
-    && git clone https://github.com/linux-test-project/lcov.git && cd lcov && git checkout v1.14 && make install \
-    && cd / && rm -rf /extra \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends -t buster lcov zlib1g-dev abi-dumper g++ g++-8 ccache ninja-build \
+    && mv /old_sources.list /etc/apt/sources.list \
     && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \

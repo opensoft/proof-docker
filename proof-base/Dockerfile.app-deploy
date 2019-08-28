@@ -30,11 +30,12 @@ COPY prebuilt/*.deb /prebuilt/
 
 RUN chmod +x /image_cleaner.sh \
     && mkdir /prebuilt-extras && (mv /prebuilt/*opencv* /prebuilt-extras/ || true) \
-    && cp /etc/apt/sources.list /old_sources.list \
-    && echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list \
     && apt-get -qq update \
-    && apt-get -qq install libzstd1 ca-certificates -t stretch-backports -y --no-install-recommends \
-    && apt-get -qq install libc6 libgcc1 libstdc++6 zlib1g -t testing -y --no-install-recommends \
+    && apt-get -qq install libzstd-dev ca-certificates -t stretch-backports -y --no-install-recommends \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq install libc6 libgcc1 libstdc++6 zlib1g -t buster -y --no-install-recommends \
     && mv /old_sources.list /etc/apt/sources.list \
     && apt-get -qq update \
     && apt-get -qq dist-upgrade -y --no-install-recommends \

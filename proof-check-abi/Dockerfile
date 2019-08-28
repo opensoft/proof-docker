@@ -25,13 +25,13 @@
 
 FROM opensoftdev/proof-base
 
-COPY etc_apt_sources.list /etc/apt/sources.list
-COPY etc_apt_preferences /etc/apt/preferences
-
-RUN rm /etc/apt/sources.list.d/backports.list \
-    && apt-get -qq update \
+RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends -t stretch-backports cmake make pkg-config git fakeroot libgl1-mesa-dev python3 libqrencode-dev libproxy-dev \
-    && apt-get -qq install -y --no-install-recommends -t testing abi-compliance-checker abi-dumper zlib1g-dev g++ g++-8 universal-ctags ccache ninja-build \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends -t buster abi-compliance-checker abi-dumper zlib1g-dev g++ g++-8 universal-ctags ccache ninja-build \
+    && mv /old_sources.list /etc/apt/sources.list \
     && /usr/sbin/update-ccache-symlinks \
     && mkdir /sandbox \
     && git config --global advice.detachedHead false \

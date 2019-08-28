@@ -27,8 +27,11 @@ FROM opensoftdev/proof-builder-base
 
 RUN CLANG_VERSION=7 \
     BUILD_DEPS="libclang-$CLANG_VERSION-dev llvm-$CLANG_VERSION-dev" \
+    && cp /etc/apt/sources.list /old_sources.list \
+    && echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list \
     && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends -t testing $BUILD_DEPS \
+    && apt-get -qq install -y --no-install-recommends -t buster $BUILD_DEPS \
+    && mv /old_sources.list /etc/apt/sources.list \
     && git clone -b 1.5 --depth 1 https://github.com/KDE/clazy.git \
     && mkdir clazy/build \
     && cd clazy/build \
